@@ -226,5 +226,53 @@
       step = 0;
     }
   </script>
+  <script>
+  // === Оркестратор сцен от виджета ===
+  const modals = ["catalogModal","comboModal","confirmModal","loadingModal","thanksModal"];
+  let busy = false;
+
+  function hideAll() {
+    document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
+    document.getElementById("overlay").style.display = "none";
+  }
+  function show(id) {
+    hideAll();
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById(id).classList.add("active");
+  }
+
+  async function runScene(scene){
+    if (busy) return;
+    busy = true;
+    // карта сцен
+    if (scene==="showCatalog") show("catalogModal");
+    if (scene==="showCombo")    show("comboModal");
+    if (scene==="confirm")      show("confirmModal");
+    if (scene==="loading")      show("loadingModal");
+    if (scene==="thanks")       show("thanksModal");
+    if (scene==="reset")        hideAll();
+
+    // даем верстке успокоиться и сообщаем виджету, что UI готов
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        window.postMessage({type:"pizza:uiReady"}, "*");
+        busy = false;
+      }, 180); // мягкая задержка, чтобы речь не ушла вперед
+    });
+  }
+
+  // Прием команд из виджета
+  window.addEventListener("message",(e)=>{
+    const t = e.data;
+    if (!t || typeof t!=="object") return;
+    // Ожидаем {type:"pizza:cmd", scene:"showCatalog"}
+    if (t.type==="pizza:cmd" && t.scene){
+      runScene(t.scene);
+    }
+  });
+
+  // если кликаем мышкой — оставляем твою демонстрационную механику
+  // (ничего не ломаю)
+</script>
 </body>
 </html>
