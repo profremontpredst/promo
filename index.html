@@ -199,222 +199,116 @@
     >
   </div> 
 
-  <script>
-    let step = 0;
-    function nextStep() {
-      document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
-      document.getElementById("overlay").style.display = "block";
-      step++;
-      if (step === 1) {
-        document.getElementById("catalogModal").classList.add("active");
-      } else if (step === 2) {
-        document.getElementById("comboModal").classList.add("active");
-      } else if (step === 3) {
-        document.getElementById("confirmModal").classList.add("active");
-      } else if (step === 4) {
-        document.getElementById("loadingModal").classList.add("active");
-        setTimeout(() => {
-          document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
-          document.getElementById("thanksModal").classList.add("active");
-        }, 3000);
-      }
+  <!-- ======= REPLACE FROM HERE TO </body> ======= -->
+<script>
+  // Демо-клики по странице (оставляем)
+  let step = 0;
+  function nextStep() {
+    document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
+    document.getElementById("overlay").style.display = "block";
+    step++;
+    if (step === 1) {
+      document.getElementById("catalogModal").classList.add("active");
+    } else if (step === 2) {
+      document.getElementById("comboModal").classList.add("active");
+    } else if (step === 3) {
+      document.getElementById("confirmModal").classList.add("active");
+    } else if (step === 4) {
+      document.getElementById("loadingModal").classList.add("active");
+      setTimeout(() => {
+        document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
+        document.getElementById("thanksModal").classList.add("active");
+      }, 3000);
     }
-
-    function closeModals() {
-      document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
-      document.getElementById("overlay").style.display = "none";
-      step = 0;
-    }
-  </script>
-  <script>
-  // === Оркестратор сцен от виджета ===
-  const modals = ["catalogModal","comboModal","confirmModal","loadingModal","thanksModal"];
-  let busy = false;
-
-  function hideAll() {
+  }
+  function closeModals() {
     document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
     document.getElementById("overlay").style.display = "none";
+    step = 0;
   }
-  function show(id) {
-    hideAll();
-    document.getElementById("overlay").style.display = "block";
-    document.getElementById(id).classList.add("active");
-  }
+</script>
 
-  async function runScene(scene){
-    if (busy) return;
-    busy = true;
-    // карта сцен
-    if (scene==="showCatalog") show("catalogModal");
-    if (scene==="showCombo")    show("comboModal");
-    if (scene==="confirm")      show("confirmModal");
-    if (scene==="loading")      show("loadingModal");
-    if (scene==="thanks")       show("thanksModal");
-    if (scene==="reset")        hideAll();
-
-    // даем верстке успокоиться и сообщаем виджету, что UI готов
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        window.postMessage({type:"pizza:uiReady"}, "*");
-        busy = false;
-      }, 180); // мягкая задержка, чтобы речь не ушла вперед
-    });
-  }
-
-  // Прием команд из виджета
-  window.addEventListener("message",(e)=>{
-    const t = e.data;
-    if (!t || typeof t!=="object") return;
-    // Ожидаем {type:"pizza:cmd", scene:"showCatalog"}
-    if (t.type==="pizza:cmd" && t.scene){
-      runScene(t.scene);
-    }
-  });
-
-  // если кликаем мышкой — оставляем твою демонстрационную механику
-  // (ничего не ломаю)
+<!-- Виджет: кнопка + iframe -->
 <style>
-  .ai-float-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 70px;
-    height: 70px;
-    background-color: transparent;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 99999;
-    padding: 0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  .ai-float-button{
+    position:fixed;bottom:20px;right:20px;width:70px;height:70px;background:transparent;border:none;border-radius:50%;
+    cursor:pointer;z-index:100001;padding:0;box-shadow:0 0 10px rgba(0,0,0,.3)
   }
-
-  .ai-float-button img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
+  .ai-float-button img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  #ai-chat-frame{
+    position:fixed;bottom:20px;right:100px;width:340px;height:520px;border:none;border-radius:16px;
+    box-shadow:0 0 20px rgba(0,0,0,.4);z-index:100000;display:none;background:transparent
   }
-
-  #ai-chat-frame {
-    position: fixed;
-    bottom: 20px;
-    right: 100px;
-    width: 340px;
-    height: 520px;
-    border: none;
-    border-radius: 16px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    z-index: 99998;
-    display: none;
-  }
-
-  @media (max-width: 768px) {
-    #ai-chat-frame {
-      bottom: 100px;
-      right: 20px;
-    }
+  @media (max-width:768px){
+    #ai-chat-frame{bottom:90px;right:20px;width:calc(100vw - 40px);height:70vh}
   }
 </style>
-
 <script>
-  window.onload = function () {
-    const button = document.createElement('button');
-    button.className = 'ai-float-button';
-    button.title = 'Открыть AI-ассистента';
+  (function(){
+    // Кнопка
+    const btn=document.createElement('button');
+    btn.className='ai-float-button'; btn.title='Открыть Анну';
+    const img=document.createElement('img');
+    img.src='https://i.postimg.cc/mgP268Zt/96f08734-0442-48ea-bd9e-e3e25cb92060-1.png';
+    img.alt='AI'; btn.appendChild(img);
 
-    const img = document.createElement('img');
-    img.src = 'https://i.postimg.cc/mgP268Zt/96f08734-0442-48ea-bd9e-e3e25cb92060-1.png';
-    img.alt = 'AI';
-    button.appendChild(img);
+    // Iframe
+    const iframe=document.createElement('iframe');
+    iframe.id='ai-chat-frame';
+    iframe.src='https://gpt-widget.onrender.com'; // если другой урл — замени
+    iframe.allow='microphone';
 
-    const iframe = document.createElement('iframe');
-    iframe.id = 'ai-chat-frame';
-    iframe.src = 'https://gpt-widget.onrender.com';
-    iframe.allow = 'microphone';
+    btn.onclick=()=>{ iframe.style.display = (iframe.style.display==='block') ? 'none' : 'block'; };
 
-    button.onclick = function () {
-      iframe.style.display = (iframe.style.display === 'block') ? 'none' : 'block';
-    };
-
-    document.body.appendChild(button);
+    document.body.appendChild(btn);
     document.body.appendChild(iframe);
 
-    window.addEventListener("message", (event) => {
-      if (event.data === "open-widget") {
-        iframe.style.display = 'block';
+    // Авто-открытие от виджета
+    window.addEventListener('message',e=>{
+      if(e.data==='open-widget'){ iframe.style.display='block'; }
+    });
+
+    // ===== Оркестратор сцен (фикс ответа в iframe) =====
+    let widgetWin=null;
+    const getWidgetWin=()=> widgetWin || iframe.contentWindow || null;
+
+    function hideAll(){
+      document.querySelectorAll('.modal').forEach(m=>m.classList.remove('active'));
+      const ov=document.getElementById('overlay'); if(ov) ov.style.display='none';
+    }
+    function show(id){
+      hideAll();
+      const ov=document.getElementById('overlay'); if(ov) ov.style.display='block';
+      const el=document.getElementById(id); if(el) el.classList.add('active');
+    }
+
+    let busy=false;
+    async function runScene(scene){
+      if(busy) return; busy=true;
+      if(scene==='showCatalog') show('catalogModal');
+      if(scene==='showCombo')   show('comboModal');
+      if(scene==='confirm')     show('confirmModal');
+      if(scene==='loading')     show('loadingModal');
+      if(scene==='thanks')      show('thanksModal');
+      if(scene==='reset')       hideAll();
+
+      requestAnimationFrame(()=>{ setTimeout(()=>{
+        const w=getWidgetWin(); if(w) w.postMessage({type:'pizza:uiReady'}, '*'); // ← ключевой фикс
+        busy=false;
+      },180);});
+    }
+
+    // Приём команд от виджета
+    window.addEventListener('message',e=>{
+      const t=e.data;
+      if(!t || typeof t!=='object') return;
+      if(t.type==='pizza:cmd' && t.scene){
+        widgetWin = e.source || iframe.contentWindow;
+        runScene(t.scene);
       }
     });
-  };
+  })();
 </script>
-
-<!-- Оркестратор сцен с фиксами -->
-<script>
-  let widgetWin = null;
-
-  function getWidgetWin() {
-    try {
-      return widgetWin || document.getElementById('ai-chat-frame')?.contentWindow || null;
-    } catch { return null; }
-  }
-
-  function hideAll() {
-    document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
-    const ov = document.getElementById("overlay");
-    if (ov) ov.style.display = "none";
-  }
-  function show(id) {
-    hideAll();
-    const ov = document.getElementById("overlay");
-    if (ov) ov.style.display = "block";
-    document.getElementById(id)?.classList.add("active");
-  }
-
-  let busy = false;
-  async function runScene(scene){
-    if (busy) return;
-    busy = true;
-
-    if (scene==="showCatalog") show("catalogModal");
-    if (scene==="showCombo")    show("comboModal");
-    if (scene==="confirm")      show("confirmModal");
-    if (scene==="loading")      show("loadingModal");
-    if (scene==="thanks")       show("thanksModal");
-    if (scene==="reset")        hideAll();
-
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        const w = getWidgetWin();
-        if (w) w.postMessage({type:"pizza:uiReady"}, "*");
-        busy = false;
-      }, 180);
-    });
-  }
-
-  window.addEventListener("message",(e)=>{
-    const t = e.data;
-    if (!t || typeof t!=="object") return;
-    if (t.type==="pizza:cmd" && t.scene){
-      widgetWin = e.source || getWidgetWin();
-      runScene(t.scene);
-    }
-  });
-
-  let step = 0;
-  window.nextStep = function() {
-    document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
-    const ov = document.getElementById("overlay");
-    if (ov) ov.style.display = "block";
-    step++;
-    if (step === 1) show("catalogModal");
-    else if (step === 2) show("comboModal");
-    else if (step === 3) show("confirmModal");
-    else if (step === 4) {
-      show("loadingModal");
-      setTimeout(() => { hideAll(); show("thanksModal"); }, 3000);
-    }
-  };
-  window.closeModals = function() { hideAll(); step = 0; };
-</script>
+<!-- ======= /REPLACE BLOCK ======= -->
 </body>
 </html>
