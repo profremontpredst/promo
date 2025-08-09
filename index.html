@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Пицца по кайфу</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff7f0;
+      color: #333;
+    }
+    header {
+      background-color: #ff5c33;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      color: white;
+      font-size: 28px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 30px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .hero {
+      background: url('https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg') center/cover no-repeat;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .hero h2 {
+      font-size: 48px;
+      max-width: 80%;
+      text-align: center;
+    }
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      display: none;
+      z-index: 9999;
+      width: 90%;
+      max-width: 800px;
+      text-align: center;
+    }
+    .modal.active {
+      display: block;
+    }
+    .catalog-grid {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .catalog-item {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fafafa;
+      text-align: center;
+      padding-bottom: 10px;
+    }
+    .catalog-item img {
+      width: 240px;
+      height: 180px;
+      object-fit: contain;
+    }
+    .catalog-item h4 {
+      margin: 10px 0 4px;
+    }
+    .catalog-item .price {
+      color: #d62828;
+      font-weight: bold;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 9998;
+    }
+    .button {
+      background: #ff5c33;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .combo-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+    .combo-content img {
+      max-width: 250px;
+      border-radius: 12px;
+    }
+    .loading {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body onclick="nextStep()">
+  <header>
+    <h1>Пицца по кайфу</h1>
+    <nav>
+      <a href="#menu">Меню</a>
+      <a href="#about">О нас</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Горячая пицца прямо к твоей двери 🍕</h2>
+  </section>
+
+  <div class="overlay" id="overlay" onclick="closeModals()"></div>
+
+  <div class="modal" id="catalogModal">
+    <h3>Каталог</h3>
+    <div class="catalog-grid">
+      <div class="catalog-item">
+        <img src="https://i.ibb.co/mr9SDRxD/2d5e4c63-7964-4578-925a-c774e78020d7.png" alt="Пицца">
+        <h4>Пицца 33см</h4>
+        <div class="price">850 ₽</div>
+      </div>
+      <div class="catalog-item">
+        <img src="https://i.ibb.co/spcFRTyK/dbbd4099-3e02-44cf-b46f-6ebb7f052682.png" alt="Картошка">
+        <h4>Картошка большая</h4>
+        <div class="price">300 ₽</div>
+      </div>
+      <div class="catalog-item">
+        <img src="https://i.ibb.co/C3XDzbXn/3f125871-9eba-40ef-a9a5-5482908c7093.png" alt="Кола">
+        <h4>Кола 1л</h4>
+        <div class="price">350 ₽</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="comboModal">
+    <h3>🔥 Комбо заказ</h3>
+    <div class="combo-content">
+      <ul style="text-align: left;">
+        <li>🍕 Пицца Пепперони — Большая</li>
+        <li>🍟 Картошка Фри — Большая</li>
+        <li>🥤 Кола — Большая</li>
+        <li>🎁 Бесплатный пончик + 30% купончик</li>
+      </ul>
+      <img src="https://i.ibb.co/Q7Khbrn7/78d96ef5-65af-4aec-a0f3-a93257d5c566.png" alt="Комбо">
+    </div>
+    <p><s>1500 ₽</s></p>
+    <p style="font-size: 24px; color: #d62828; font-weight: bold;">1050 ₽ с учётом скидки</p>
+    <button class="button" onclick="nextStep(); event.stopPropagation();">Подтвердить данные</button>
+  </div>
+
+  <div class="modal" id="confirmModal">
+    <h3>Подтвердите оплату</h3>
+    <button class="button" onclick="nextStep(); event.stopPropagation();">Подтвердить</button>
+  </div>
+
+  <div class="modal" id="loadingModal">
+    <h3 class="loading">Оплата обрабатывается...</h3>
+  </div>
+
+  <div class="modal" id="thanksModal" style="background: transparent; box-shadow: none; padding: 0;">
+    <img
+      class="thanks-gif"
+      src="https://i.ibb.co/nsBbjDbJ/7322397e-5f75-4860-b295-ba68da91a108-1-2.png"
+      alt="спасибо"
+      style="display: block; max-width: 100%; background: transparent;"
+      referrerpolicy="no-referrer"
+    >
+  </div> 
+
+  <script>
+    let step = 0;
+    function nextStep() {
+      document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
+      document.getElementById("overlay").style.display = "block";
+      step++;
+      if (step === 1) {
+        document.getElementById("catalogModal").classList.add("active");
+      } else if (step === 2) {
+        document.getElementById("comboModal").classList.add("active");
+      } else if (step === 3) {
+        document.getElementById("confirmModal").classList.add("active");
+      } else if (step === 4) {
+        document.getElementById("loadingModal").classList.add("active");
+        setTimeout(() => {
+          document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
+          document.getElementById("thanksModal").classList.add("active");
+        }, 3000);
+      }
+    }
+
+    function closeModals() {
+      document.querySelectorAll('.modal').forEach(m => m.classList.remove("active"));
+      document.getElementById("overlay").style.display = "none";
+      step = 0;
+    }
+  </script>
+</body>
+</html>
