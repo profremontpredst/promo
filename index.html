@@ -143,41 +143,20 @@
 
   <div class="overlay" id="overlay" onclick="closeModals()"></div>
 
-  <div class="modal" id="catalogModal">
-    <h3>Каталог</h3>
-    <div class="catalog-grid">
-      <div class="catalog-item">
-        <img src="https://i.ibb.co/mr9SDRxD/2d5e4c63-7964-4578-925a-c774e78020d7.png" alt="Пицца">
-        <h4>Пицца 33см</h4>
-        <div class="price">850 ₽</div>
-      </div>
-      <div class="catalog-item">
-        <img src="https://i.ibb.co/spcFRTyK/dbbd4099-3e02-44cf-b46f-6ebb7f052682.png" alt="Картошка">
-        <h4>Картошка большая</h4>
-        <div class="price">300 ₽</div>
-      </div>
-      <div class="catalog-item">
-        <img src="https://i.ibb.co/C3XDzbXn/3f125871-9eba-40ef-a9a5-5482908c7093.png" alt="Кола">
-        <h4>Кола 1л</h4>
-        <div class="price">350 ₽</div>
-      </div>
-    </div>
+    <div class="modal" id="catalogModal" style="max-width:90%;max-height:90%;padding:0;">
+    <img 
+      src="https://i.imgur.com/OTYv3mt.png" 
+      alt="Каталог" 
+      style="display:block;max-width:100%;max-height:90vh;margin:0 auto;border-radius:12px;"
+    >
   </div>
 
-  <div class="modal" id="comboModal">
-    <h3>🔥 Комбо заказ</h3>
-    <div class="combo-content">
-      <ul style="text-align: left;">
-        <li>🍕 Пицца Пепперони — Большая</li>
-        <li>🍟 Картошка Фри — Большая</li>
-        <li>🥤 Кола — Большая</li>
-        <li>🎁 Бесплатный пончик + 30% купончик</li>
-      </ul>
-      <img src="https://i.ibb.co/Q7Khbrn7/78d96ef5-65af-4aec-a0f3-a93257d5c566.png" alt="Комбо">
-    </div>
-    <p><s>1500 ₽</s></p>
-    <p style="font-size: 24px; color: #d62828; font-weight: bold;">1050 ₽ с учётом скидки</p>
-    <button class="button" onclick="nextStep(); event.stopPropagation();">Подтвердить данные</button>
+  <div class="modal" id="comboModal" style="padding:0;">
+    <img 
+      src="https://i.imgur.com/Y4u5ZpN.png" 
+      alt="Комбо" 
+      style="display:block;max-width:100%;height:auto;margin:0 auto;border-radius:12px;"
+    >
   </div>
 
   <div class="modal" id="confirmModal">
